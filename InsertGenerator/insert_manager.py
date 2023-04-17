@@ -1,13 +1,12 @@
 from generators.base_generator import Generator
 
 
-class InsertManager:
-    def __init__(self, *, table_name='<your_table>', generators, db_name=None, prefix='', ending=''):
+class SQLServerInsertManager:
+    def __init__(self, generators, table_name='<your_table>', db_name=None, *, prefix=''):
         self.generators = list(generators)
         self.table_name = table_name
         self.db_name = db_name
         self.prefix = prefix
-        self.ending = ending
 
     def get_insert_query(self, rows: int):
         query = f'USE [{self.db_name}]\n' if self.db_name else ''
@@ -21,8 +20,7 @@ class InsertManager:
             query += ')'
             if row != rows - 1:
                 query += ',\n'
-        query += ';'
-        return self.prefix + '\n' + query + '\n' + self.ending
+        return f'{self.prefix}\n{query};\nGO'
 
 
 
