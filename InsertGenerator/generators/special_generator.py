@@ -8,7 +8,5 @@ class SpecialGenerator(Generator):
         self.brackets = brackets
 
     def next(self) -> str:
-        if self.brackets:
-            return '\'' + str(self.values[random.randint(0, len(self.values) - 1)]) + '\''
-        else:
-            return str(self.values[random.randint(0, len(self.values) - 1)])
+        value = random.choice(self.values)
+        return f'\'{value}\'' if self.brackets else str(value)

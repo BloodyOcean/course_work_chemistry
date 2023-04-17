@@ -1,22 +1,15 @@
 import string
 from generators import Generator
-import random
+import secrets
 
 class HashGenerator(Generator):
-    def __init__(self, length=32, brackets=False):
+
+    def __init__(self, length=32):
         self.length = length
-        self.brackets = brackets
+
 
     def next(self) -> str:
-        result = ''
-        for i in range(self.length):
-            give_char = bool(random.randint(0, 1))
-            if give_char:
-                result += random.choice(string.ascii_letters)
-            else:
-                result += str(random.randint(0, 9))
-
-        if self.brackets:
-            return '\'' + result + '\''
-        return result
+        alphabet = string.ascii_letters + string.digits
+        hash = ''.join(secrets.choice(alphabet) for i in range(self.length))
+        return hash
 

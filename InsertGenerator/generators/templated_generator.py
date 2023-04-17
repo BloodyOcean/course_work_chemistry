@@ -1,9 +1,6 @@
 from generators import Generator
-import random
-import re
 
 
-# an example : 2017-07-28 18:34:55.830
 class TemplatedGenerator(Generator):
     def __init__(self, parts, brackets=True):
         self.parts = parts
@@ -14,8 +11,6 @@ class TemplatedGenerator(Generator):
         result = ''
         for part, gen in self.parts:
             result += part + gen.next()
-        if self.brackets:
-            return '\'' + result + '\''
-        return result
+        return f'\'{result}\'' if self.brackets else result
 
 

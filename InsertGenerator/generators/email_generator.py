@@ -1,15 +1,18 @@
-import lorem
-from lorem.text import TextLorem
-from generators import Generator
 import random
+import string
+from generators import Generator
+
+
+DEFAULT_DOMAINS = ['lpnu.ua', 'gmail.com', 'ukr.net']
 
 
 class EmailGenerator(Generator):
+
     def __init__(self, *, domains=None):
-        if domains is None:
-            domains = ['lpnu.ua', 'gmail.com', 'ukr.net']
-        self.lorem = TextLorem(wsep='.', srange=[2, 3])
-        self.domains = domains
+        self.domains = domains or DEFAULT_DOMAINS
+
 
     def next(self) -> str:
-        return '\'' + self.lorem.sentence() + '@' + random.choice(self.domains) + '\''
+        username = ''.join(random.choices(string.ascii_lowercase, k=10))
+        domain = random.choice(self.domains)
+        return f'\'{username}@{domain}\''

@@ -1,25 +1,29 @@
-from generators import Generator
+from datetime import datetime, timedelta
 import random
-import re
+from generators import Generator
 
-
-# an example : 2017-07-28 18:34:55.830
 class DatetimeGenerator(Generator):
-    def __init__(self, *, start: str, end: str):
-        self.start_values = [int(x) for x in re.split('[- :.]', start)]
-        self.end_values = [int(x) for x in re.split('[- :.]', end)]
-        self.separators = [char for char in start if not char.isnumeric()]
-        self.sizes = [len(x) for x in re.split('[- :.]', start)]
+    
+    def __init__(self, start: datetime, end: datetime):
+        self.start = start;
+        self.end = end;
+        
 
-    def next(self) -> str:
-        result = ''
-        for i in range(len(self.start_values)):
-            next_value = str(random.randint(self.start_values[i], self.end_values[i]))
-            if len(next_value) < self.sizes[i]:
-                next_value = next_value.rjust(self.sizes[i], '0')
-            result += next_value
-            if i != len(self.separators):
-                result += self.separators[i]
-        return '\'' + result + '\''
+    def next(self):
+        """
+        Returns a random datetime string between two given datetimes in the format of
+        YYYY-MM-DD HH:MM:SS, suitable for use in SQL Server.
 
-
+        Args:
+        start (datetime): The start of the datetime range
+        end (datetime): The end of the datetime range
+        
+        Returns:
+        str: A randomly generated datetime string within the given range.
+        """
+        delta = self.end - self.start
+        seconds = delta.total_seconds()
+        random_seconds = random.randrange(seconds)
+        random_delta = timedelta(seconds=random_seconds)
+        random_datetime = self.start + random_delta
+        return random_datetime.strftime('\'%Y-%m-%d %H:%M:%S\'')
