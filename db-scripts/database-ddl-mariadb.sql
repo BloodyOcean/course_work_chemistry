@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS orders
     id          INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT                                                 NOT NULL,
     order_date  TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP,
-    total       DECIMAL(10, 2)                                      NOT NULL,
     status      ENUM ('Accepted', 'InProgress', 'Done', 'Canceled') NOT NULL DEFAULT 'Accepted',
     create_date TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP,
     update_date TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
