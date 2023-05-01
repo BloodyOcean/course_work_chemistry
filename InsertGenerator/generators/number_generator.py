@@ -22,7 +22,7 @@ class NumberGenerator(Generator):
             else:
                 self.stay_counter += 1
             return str(val)
-        
+
         return str(random.randint(self.start, self.end))
 
 
@@ -36,4 +36,4 @@ class FloatGenerator(Generator):
     def next(self) -> str:
         if self.brackets:
             return '\'' + str(round(random.uniform(self.start, self.end), self.precision - 1)) + '0' + '\''
-        return  str(round(random.uniform(self.start, self.end), self.precision - 1)) + '0'
+        return str(round(random.uniform(self.start, self.end), self.precision - 1)) + '0'

@@ -7,7 +7,6 @@ class NameGenerator(Generator):
         self.fn = firstname
         self.ln = lastname
 
-
     def next(self) -> str:
         result = None
 
@@ -17,5 +16,5 @@ class NameGenerator(Generator):
             result = names.get_last_name()
         else:
             result = names.get_first_name()
-        
+
         return f'\'{result}\''

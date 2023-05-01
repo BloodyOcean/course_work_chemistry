@@ -1,4 +1,3 @@
-import lorem_text
 from lorem.text import TextLorem
 from generators import Generator
 

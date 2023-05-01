@@ -1,2 +1,5 @@
 lorem==0.1.1
 names==0.3.0
+SQLAlchemy~=2.0.10
+mimesis~=8.0.0
+Faker~=18.5.1
