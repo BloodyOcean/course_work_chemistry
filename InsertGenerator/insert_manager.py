@@ -1,6 +1,3 @@
-from generators.base_generator import Generator
-
-
 class SQLServerInsertManager:
     def __init__(self, generators, table_name='<your_table>', db_name=None, *, prefix=''):
         self.generators = list(generators)
@@ -21,6 +18,3 @@ class SQLServerInsertManager:
             if row != rows - 1:
                 query += ',\n'
         return f'{self.prefix}\n{query};\nGO'
-
-
-

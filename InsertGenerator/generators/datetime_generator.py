@@ -2,12 +2,12 @@ from datetime import datetime, timedelta
 import random
 from generators import Generator
 
+
 class DatetimeGenerator(Generator):
-    
+
     def __init__(self, start: datetime, end: datetime):
-        self.start = start;
-        self.end = end;
-        
+        self.start = start
+        self.end = end
 
     def next(self):
         """

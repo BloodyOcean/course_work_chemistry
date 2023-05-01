@@ -7,4 +7,3 @@ class NullGenerator(Generator):
 
     def next(self) -> str:
         return 'NULL'
-
