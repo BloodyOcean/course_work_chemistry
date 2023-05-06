@@ -6,7 +6,7 @@ from models.models import DbHelper
 
 
 def main():
-    cfg_helper = ConfigHelper()
+    cfg_helper = ConfigHelper(path='configs/config.example.ini')
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
