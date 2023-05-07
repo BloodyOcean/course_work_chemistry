@@ -108,7 +108,7 @@ class Packaging(Base):
 class Discount(Base):
     __tablename__ = 'discounts'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(50), nullable=False)
+    title = Column(String(200), nullable=False)
     description = Column(String(1000), nullable=False)
     start_date = Column(DateTime, default=datetime.utcnow, nullable=False)
     discount_percent = Column(Float(precision=2), nullable=False, default=5)
@@ -205,16 +205,10 @@ class Shipping(Base):
 
     orders: Mapped[List["Order"]] = relationship(backref="Shipping")
 
-    def __init__(self):
-        self.receiver = mimesis.Person().full_name()
-        self.carrier = mimesis.Finance().company()
-        self.shipping_address = mimesis.Address().address()
-        self.shipping_zip = mimesis.Address().zip_code()
-        self.shipping_city = mimesis.Address().city()
-        self.shipping_state = mimesis.Address().state()
-        self.tracking_number = mimesis.Payment().credit_card_number()
-
-    def __init__(self, due_date: DateTime):
+    
+    def __init__(self, due_date: DateTime = None):
+        if due_date:
+            self.due_date = due_date
         self.delivery_date = due_date
         self.receiver = mimesis.Person().full_name()
         self.carrier = mimesis.Finance().company()
