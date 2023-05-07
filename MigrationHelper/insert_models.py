@@ -1,5 +1,41 @@
 
-def map_customers(rows):
+def map_discounts(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'title': row[1],
+        'description': row[2],
+        'start_date': str(row[3]),
+        'end_date': str(row[4]),
+        'discount_percent': str(row[5]),
+        'create_date': str(row[6]),
+        'update_date': str(row[7])
+    } for row in rows]
+
+
+def map_packaging(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'name': row[1],
+        'description': row[2],
+        'create_date': str(row[3]),
+        'update_date': str(row[4])
+    } for row in rows]
+
+
+def map_suppliers(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'name': row[1],
+        'contact_name': row[2],
+        'phone_number': row[3],
+        'email': row[4],
+        'address': row[5],
+        'create_date': str(row[6]),
+        'update_date': str(row[7])
+    } for row in rows]
+
+
+def map_customers(rows) -> list[dict]:
     return [
         {
             'id': str(row[0]),
@@ -17,7 +53,7 @@ def map_customers(rows):
     ]
 
 
-def map_product_categorys(rows):
+def map_product_categories(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
         'name': row[1],
@@ -26,7 +62,7 @@ def map_product_categorys(rows):
     } for row in rows]
 
 
-def map_manufacturers(rows):
+def map_manufacturers(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
         'name': row[1],
@@ -38,7 +74,7 @@ def map_manufacturers(rows):
     } for row in rows]
 
 
-def map_products(rows):
+def map_products(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
         'name': row[1],
@@ -52,7 +88,7 @@ def map_products(rows):
     } for row in rows]
 
 
-def map_orders(rows):
+def map_orders(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
         'customer_id': str(row[1]),
@@ -63,7 +99,7 @@ def map_orders(rows):
     } for row in rows]
 
 
-def map_order_items(rows):
+def map_order_items(rows) -> list[dict]:
     return [{
         'order_id': str(row[0]),
         'product_id': str(row[1]),
@@ -71,7 +107,7 @@ def map_order_items(rows):
     } for row in rows]
 
 
-def map_comments(rows):
+def map_comments(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
         'product_id': str(row[1]),
@@ -83,7 +119,7 @@ def map_comments(rows):
     } for row in rows]
 
 
-def map_payments(rows):
+def map_payments(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
         'order_id': str(row[1]),
@@ -95,4 +131,21 @@ def map_payments(rows):
         'card_exp_month': str(row[7]),
         'card_exp_year': str(row[8]),
         'card_cvv': row[9]
+    } for row in rows]
+
+
+def map_shipping(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'order_id': str(row[1]),
+        'delivery_date': str(row[2]),
+        'carrier': row[3],
+        'receiver': row[4],
+        'tracking_number': row[5],
+        'shipping_address': row[6],
+        'shipping_city': row[7],
+        'shipping_state': row[8],
+        'shipping_zip': row[9],
+        'create_date': str(row[10]),
+        'update_date': str(row[11])
     } for row in rows]
