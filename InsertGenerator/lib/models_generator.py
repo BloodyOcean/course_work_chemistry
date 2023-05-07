@@ -35,25 +35,29 @@ class ModelsGenerator:
         self.manufactors.extend(res)
         return res
 
-    def generate_packaging(self, count: int) -> List[Packaging]:
+    def generate_packaging(self, count: int, deformator: PackagingDeformationInterface) -> List[Packaging]:
         rows = (Packaging() for _ in range(count))
-        self.packaging.extend(rows)
-        return rows
+        res = [deformator.spoil(row) for row in rows]
+        self.packaging.extend(res)
+        return res
 
-    def generate_discount(self, count: int) -> List[Discount]:
+    def generate_discount(self, count: int , deformator:DiscountDeformationInterface) -> List[Discount]:
         rows = (Discount() for _ in range(count))
-        self.discounts.extend(rows)
-        return rows
+        res = [deformator.spoil(row) for row in rows]
+        self.discounts.extend(res)
+        return res
 
-    def generate_shipping(self, count: int) -> List[Shipping]:
+    def generate_shipping(self, count: int, deformator:ShippingDeformationInterface) -> List[Shipping]:
         rows = (Shipping() for _ in range(count))
+        res = [deformator.spoil(row) for row in rows]
         self.shipping.extend(rows)
         return rows
 
-    def generate_supplier(self, count: int) -> List[Supplier]:
+    def generate_supplier(self, count: int, deformator: SupplierDeformationInterface) -> List[Supplier]:
         rows = (Supplier() for _ in range(count))
-        self.suppliers.extend(rows)
-        return rows
+        res = [deformator.spoil(row) for row in rows]
+        self.suppliers.extend(res)
+        return res
 
     def generate_orders(self, count: int, deformator: OrderDeformationInterface) -> List[Order]:
         temp_customers = self.db_service.get_instances(count, Customer)
