@@ -82,9 +82,12 @@ def map_products(rows) -> list[dict]:
         'price': str(row[3]),
         'quantity': str(row[4]),
         'manufacturer_id': str(row[5]),
-        'category_id': str(row[6]),
-        'create_date': str(row[7]),
-        'update_date': str(row[8])
+        'supplier_id': str(row[6]),
+        'packaging_id': str(row[7]),
+        'discount_id': str(row[8]),
+        'category_id': str(row[9]),
+        'create_date': str(row[10]),
+        'update_date': str(row[11])
     } for row in rows]
 
 
@@ -128,9 +131,6 @@ def map_payments(rows) -> list[dict]:
         'payment_amount': str(row[4]),
         'card_number': row[5],
         'card_holder': row[6],
-        'card_exp_month': str(row[7]),
-        'card_exp_year': str(row[8]),
-        'card_cvv': row[9]
     } for row in rows]
 
 
