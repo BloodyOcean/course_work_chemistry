@@ -91,6 +91,21 @@ CREATE TABLE IF NOT EXISTS products
     FOREIGN KEY (manufacturer_id) REFERENCES manufacturers (id)
 );
 
+CREATE TABLE IF NOT EXISTS shipping
+(
+    id               INT PRIMARY KEY AUTO_INCREMENT,
+    delivery_date    TIMESTAMP    NOT NULL,
+    carrier          VARCHAR(50)  NOT NULL,
+    receiver         VARCHAR(100) NOT NULL,
+    tracking_number  VARCHAR(50)  NOT NULL,
+    shipping_address VARCHAR(150) NOT NULL,
+    shipping_city    VARCHAR(50)  NOT NULL,
+    shipping_state   VARCHAR(50)  NOT NULL,
+    shipping_zip     VARCHAR(10)  NOT NULL,
+    create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS orders
 (
     id          INT PRIMARY KEY AUTO_INCREMENT,
@@ -121,7 +136,7 @@ CREATE TABLE IF NOT EXISTS comments
     customer_id  INT          NOT NULL,
     comment_text VARCHAR(255) NOT NULL,
     rating       SMALLINT     NOT NULL,
-    # [1; 10] 
+    # [1; 10]
     create_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES products (id),
@@ -138,20 +153,5 @@ CREATE TABLE IF NOT EXISTS payments
     card_number    VARCHAR(20),
     card_holder    VARCHAR(100),
     FOREIGN KEY (order_id) REFERENCES orders (id)
-);
-
-CREATE TABLE IF NOT EXISTS shipping
-(
-    id               INT PRIMARY KEY AUTO_INCREMENT,
-    delivery_date    TIMESTAMP    NOT NULL,
-    carrier          VARCHAR(50)  NOT NULL,
-    receiver         VARCHAR(100) NOT NULL,
-    tracking_number  VARCHAR(50)  NOT NULL,
-    shipping_address VARCHAR(150) NOT NULL,
-    shipping_city    VARCHAR(50)  NOT NULL,
-    shipping_state   VARCHAR(50)  NOT NULL,
-    shipping_zip     VARCHAR(10)  NOT NULL,
-    create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
