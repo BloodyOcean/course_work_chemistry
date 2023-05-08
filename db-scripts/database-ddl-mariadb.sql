@@ -94,12 +94,14 @@ CREATE TABLE IF NOT EXISTS products
 CREATE TABLE IF NOT EXISTS orders
 (
     id          INT PRIMARY KEY AUTO_INCREMENT,
+    shipping_id INT,
     customer_id INT                                                 NOT NULL,
     order_date  TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP,
     status      ENUM ('Accepted', 'InProgress', 'Done', 'Canceled') NOT NULL DEFAULT 'Accepted',
     create_date TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP,
     update_date TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES customers (id)
+    FOREIGN KEY (customer_id) REFERENCES customers (id),
+    FOREIGN KEY (shipping_id) REFERENCES shipping (id)
 );
 
 CREATE TABLE IF NOT EXISTS order_items
@@ -141,7 +143,6 @@ CREATE TABLE IF NOT EXISTS payments
 CREATE TABLE IF NOT EXISTS shipping
 (
     id               INT PRIMARY KEY AUTO_INCREMENT,
-    order_id         INT          NOT NULL,
     delivery_date    TIMESTAMP    NOT NULL,
     carrier          VARCHAR(50)  NOT NULL,
     receiver         VARCHAR(100) NOT NULL,
@@ -151,7 +152,6 @@ CREATE TABLE IF NOT EXISTS shipping
     shipping_state   VARCHAR(50)  NOT NULL,
     shipping_zip     VARCHAR(10)  NOT NULL,
     create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders (id)
+    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

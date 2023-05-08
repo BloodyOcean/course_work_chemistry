@@ -94,11 +94,12 @@ def map_products(rows) -> list[dict]:
 def map_orders(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
-        'customer_id': str(row[1]),
-        'order_date': str(row[2]),
-        'status': row[3],
-        'create_date': str(row[4]),
-        'update_date': str(row[5])
+        'shipping_id': str(row[1])
+        'customer_id': str(row[2]),
+        'order_date': str(row[3]),
+        'status': row[4],
+        'create_date': str(row[5]),
+        'update_date': str(row[6])
     } for row in rows]
 
 
@@ -137,15 +138,14 @@ def map_payments(rows) -> list[dict]:
 def map_shipping(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
-        'order_id': str(row[1]),
-        'delivery_date': str(row[2]),
-        'carrier': row[3],
-        'receiver': row[4],
-        'tracking_number': row[5],
-        'shipping_address': row[6],
-        'shipping_city': row[7],
-        'shipping_state': row[8],
-        'shipping_zip': row[9],
-        'create_date': str(row[10]),
-        'update_date': str(row[11])
+        'delivery_date': str(row[1]),
+        'carrier': row[2],
+        'receiver': row[3],
+        'tracking_number': row[4],
+        'shipping_address': row[5],
+        'shipping_city': row[6],
+        'shipping_state': row[7],
+        'shipping_zip': row[8],
+        'create_date': str(row[9]),
+        'update_date': str(row[10])
     } for row in rows]
