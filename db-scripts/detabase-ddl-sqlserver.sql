@@ -119,12 +119,14 @@ IF NOT EXISTS(SELECT *
 CREATE TABLE orders
 (
     id          INT PRIMARY KEY IDENTITY (1,1),
+    shipping_id INT,
     customer_id INT         NOT NULL,
     order_date  DATETIME             DEFAULT CURRENT_TIMESTAMP,
     status      VARCHAR(50) NOT NULL DEFAULT 'Accepted',
     create_date DATETIME             DEFAULT CURRENT_TIMESTAMP,
     update_date DATETIME             DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (customer_id) REFERENCES customers (id)
+    FOREIGN KEY (customer_id) REFERENCES customers (id),
+    FOREIGN KEY (shipping_id) REFERENCES shipping_id (id)
 );
 
 IF NOT EXISTS(SELECT *
@@ -177,7 +179,6 @@ IF NOT EXISTS(SELECT *
 CREATE TABLE shipping
 (
     id               INT PRIMARY KEY IDENTITY (1,1),
-    order_id         INT            NOT NULL,
     delivery_date    DATETIME       NOT NULL,
     carrier          VARCHAR(50)    NOT NULL,
     receiver         VARCHAR(100)    NOT NULL,
@@ -188,7 +189,6 @@ CREATE TABLE shipping
     shipping_zip     VARCHAR(10)    NOT NULL,
     create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
 
