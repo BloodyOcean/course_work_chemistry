@@ -5,7 +5,7 @@ USE pharmacy_shop;
 CREATE TABLE IF NOT EXISTS discounts
 (
     id               INT PRIMARY KEY AUTO_INCREMENT,
-    title            VARCHAR(50)   NOT NULL,
+    title            VARCHAR(200)   NOT NULL,
     description      VARCHAR(1000) NOT NULL,
     start_date       TIMESTAMP     NOT NULL,
     end_date         TIMESTAMP     NOT NULL,

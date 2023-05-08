@@ -10,7 +10,7 @@ IF NOT EXISTS(SELECT *
 CREATE TABLE discounts
 (
     id               INT PRIMARY KEY IDENTITY (1,1),
-    title             VARCHAR(50)   NOT NULL,
+    title             VARCHAR(200)   NOT NULL,
     description      VARCHAR(1000) NOT NULL,
     start_date       DATETIME      NOT NULL,
     end_date         DATETIME      NOT NULL,

@@ -1,12 +1,15 @@
 import argparse
-from lib.models_generator import ModelsGenerator
+
+from deformation import DiscountDeformation, ShippingDeformation
 from lib.config_helper import ConfigHelper
-from lib.models_generator import CustomerDeformation
+from lib.models_generator import *
 from models.models import DbHelper
 
 
 def main():
-    cfg_helper = ConfigHelper(path='configs/config.example.ini')
+    # Don't use config.example.ini. Just copy it, rename to config.ini and replace example values 
+    # with actual ones. In this way stuff that are used in reality won't be revealed on github.
+    cfg_helper = ConfigHelper(path='configs/config.ini')
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
@@ -16,9 +19,13 @@ def main():
     
     session = db_helper.session
 
-    deformator = CustomerDeformation(0.5)
+    deformatorDiscount = DiscountDeformation(0.5)
+    deformatorShipping = ShippingDeformation(0.5)
+
     mod_gen = ModelsGenerator(session)
-    res = mod_gen.generate_customers(10, deformator)
+    res = mod_gen.generate_discount(100, deformatorDiscount)
+    mod_gen.load_by_lst(res)
+    res = mod_gen.generate_shipping(100, deformatorShipping)
     mod_gen.load_by_lst(res)
 
 
