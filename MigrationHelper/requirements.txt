@@ -1,0 +1,3 @@
+SQLAlchemy==2.0.12
+pyodbc==4.0.39
+PyMySQL==1.0.3

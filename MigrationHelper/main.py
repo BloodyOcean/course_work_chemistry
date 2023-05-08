@@ -47,7 +47,7 @@ def move_data(srcTableName: str, destTableName: str, data_processors: list) -> N
     dest_conn.close()
 
 
-def connect_table(tableName: str, connection_string: str) -> (Connection, Table):
+def connect_table(tableName: str, connection_string: str) -> tuple[Connection, Table]:
     """
         Connects to the mariadb and creates instances of connection and creates a table based on read metadate
         and 'tableName' parameter
