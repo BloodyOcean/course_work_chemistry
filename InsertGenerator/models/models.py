@@ -38,6 +38,21 @@ class Customer(Base):
         self.state = mimesis.Address().state()
         self.zip_code = mimesis.Address().zip_code()
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'email': self.email,
+            'phone_number': self.phone_number,
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zip_code': self.zip_code,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
 
 class ProductCategory(Base):
     __tablename__ = 'product_categories'
@@ -50,6 +65,14 @@ class ProductCategory(Base):
 
     def __init__(self):
         self.name = mimesis.Text().word()
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
 
 
 class Manufacturer(Base):
@@ -70,6 +93,16 @@ class Manufacturer(Base):
         self.contact_person = mimesis.Person().full_name()
         self.email = mimesis.Person().email()
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'contact_person': self.contact_person,
+            'email': self.email,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
 
 class Supplier(Base):
     __tablename__ = 'suppliers'
@@ -77,6 +110,7 @@ class Supplier(Base):
     name = Column(String(50), nullable=False)
     contact_name = Column(String(100), nullable=False)
     phone_number = Column(String(1000), nullable=False)
+    address = Column(String(150), nullable=False)
     email = Column(String(50), nullable=False)
     create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
@@ -90,7 +124,21 @@ class Supplier(Base):
         self.contact_name = mimesis.Person().full_name()
         self.contact_person = mimesis.Person().full_name()
         self.email = mimesis.Person().email()
+        self.phone_number = mimesis.Person().phone_number()
+        self.contact_name = mimesis.Person().full_name()
+        self.address = mimesis.Address().address()
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'contact_name': self.contact_name,
+            'phone_number': self.phone_number,
+            'email': self.email,
+            'address': self.address,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
 
 class Packaging(Base):
     __tablename__ = 'packaging'
@@ -106,25 +154,55 @@ class Packaging(Base):
         self.name = mimesis.Food().spices() + random.choice(['XL', 'L', 'M', 'S', 'XS'])
         self.description = mimesis.Text().sentence()
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
 
 class Discount(Base):
     __tablename__ = 'discounts'
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(200), nullable=False)
     description = Column(String(1000), nullable=False)
-    start_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    start_date = Column(DateTime, nullable=False)
     discount_percent = Column(Float(precision=2), nullable=False, default=5)
-    end_date = Column(DateTime, default=(datetime.utcnow() + timedelta(days=30)), nullable=False)
+    end_date = Column(DateTime, nullable=False)
     create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products_ref = relationship('Product', backref='Discount')
 
-    def __init__(self):
+    def __init__(self):    
+        now = datetime.now()
         self.title = mimesis.Text().title()
         self.description = mimesis.Text().sentence()
         self.discount_percent = random.randint(5, 100)
+        # Generate a date in the past, but not older than 3 months
+        three_months_ago = now - timedelta(days=90)
+        self.start_date = three_months_ago + timedelta(seconds=random.randint(0, int((now - three_months_ago).total_seconds())))
 
+        # Generate a date between now-1 month and now+7 months
+        one_month_ago = now - timedelta(days=30)
+        seven_months_future = now + timedelta(days=7*30)
+        self.end_date = one_month_ago + timedelta(seconds=random.randint(0, int((seven_months_future - one_month_ago).total_seconds())))
+
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'start_date': self.start_date.isoformat() if self.start_date else None,
+            'discount_percent': self.discount_percent,
+            'end_date': self.end_date.isoformat() if self.end_date else None,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
 
 class Product(Base):
     __tablename__ = 'products'
@@ -166,6 +244,22 @@ class Product(Base):
         self.packaging_ref = packaging
         self.supplier_ref = supplier
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'price': self.price,
+            'quantity': self.quantity,
+            'manufacturer_id': self.manufacturer_id,
+            'discount_id': self.discount_id,
+            'supplier_id': self.supplier_id,
+            'packaging_id': self.packaging_id,
+            'category_id': self.category_id,
+            'description': self.description,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
 
 class Comment(Base):
     __tablename__ = 'comments'
@@ -189,12 +283,22 @@ class Comment(Base):
         self.product_id = product.id
         self.customer_id = customer.id
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'product_id': self.product_id,
+            'customer_id': self.customer_id,
+            'comment_text': self.comment_text,
+            'rating': self.rating,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
 
 class Shipping(Base):
     __tablename__ = 'shipping'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    delivery_date = Column(DateTime, default=(datetime.utcnow() + timedelta(days=10)), nullable=False)
+    delivery_date = Column(DateTime, nullable=False)
     carrier = Column(String(255), nullable=False)
     receiver = Column(String(255), nullable=False)
     tracking_number = Column(String(255), nullable=False)
@@ -209,9 +313,11 @@ class Shipping(Base):
 
     
     def __init__(self, due_date: DateTime = None):
-        if due_date:
-            self.due_date = due_date
-        self.delivery_date = due_date
+        now = datetime.now()
+        four_days_ago = now - timedelta(days=4)
+        fifteen_days_future = now + timedelta(days=15)
+
+        self.delivery_date = four_days_ago + timedelta(seconds=random.randint(0, int((fifteen_days_future - four_days_ago).total_seconds())))
         self.receiver = mimesis.Person().full_name()
         self.carrier = mimesis.Finance().company()
         self.shipping_address = mimesis.Address().address()
@@ -221,13 +327,28 @@ class Shipping(Base):
         self.tracking_number = mimesis.Payment().credit_card_number()
 
 
+    def to_json(self):
+        return {
+            'id': self.id,
+            'delivery_date': self.delivery_date.isoformat() if self.delivery_date else None,
+            'carrier': self.carrier,
+            'receiver': self.receiver,
+            'tracking_number': self.tracking_number,
+            'shipping_address': self.shipping_address,
+            'shipping_city': self.shipping_city,
+            'shipping_state': self.shipping_state,
+            'shipping_zip': self.shipping_zip,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
+
 class Order(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True, autoincrement=True)
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=False)
     shipping_id = Column(Integer, ForeignKey('shipping.id'), nullable=False)
-    order_date = Column(DateTime, default=datetime.utcnow, nullable=False)
-    total = Column(Float(precision=2), nullable=False)
+    order_date = Column(DateTime, nullable=False)
     status = Column(Enum('Accepted', 'InProgress', 'Done', 'Canceled', name='order_status'), nullable=False,
                     default='Accepted')
     create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
@@ -237,12 +358,31 @@ class Order(Base):
     shipping = relationship("Shipping", backref="Order")
 
     def __init__(self, customer: Customer, shipping: Shipping):
-        self.total = random.Random().randint(1, 100)
+        now = datetime.now()
         self.customer = customer
         self.shipping = shipping
         self.shipping_id = shipping.id
         self.customer_id = customer.id
+
+        # Dates for 2 weeks ago and 4 hours ago
+        two_weeks_ago = now - timedelta(weeks=2)
+        four_hours_ago = now - timedelta(hours=4)
+        total_seconds = int((four_hours_ago - two_weeks_ago).total_seconds())
+
+        # Generate a random date between two_weeks_ago and four_hours_ago
+        self.order_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.status = random.choice(['Accepted', 'InProgress', 'Done', 'Canceled'])
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'customer_id': self.customer_id,
+            'shipping_id': self.shipping_id,
+            'order_date': self.order_date.isoformat() if self.order_date else None,
+            'status': self.status,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
 
 
 class Payment(Base):
@@ -262,6 +402,7 @@ class Payment(Base):
     order = relationship('Order', backref='payments')
 
     def __init__(self, order: Order):
+        now = datetime.now()
         self.card_number = mimesis.Payment().credit_card_number()[-4:]
         self.card_exp_year = random.randint(2025, 2030)
         self.card_exp_month = random.randint(1, 12)
@@ -270,8 +411,31 @@ class Payment(Base):
         self.card_holder = mimesis.Person().full_name()
         self.payment_amount = random.Random().randint(100, 1000) / 100
         self.order_id = order.id
+
+        # Dates for 2 weeks ago and 4 hours ago
+        two_weeks_ago = now - timedelta(weeks=2)
+        four_hours_ago = now - timedelta(hours=4)
+        total_seconds = int((four_hours_ago - two_weeks_ago).total_seconds())
+
+        # Generate a random date between two_weeks_ago and four_hours_ago
+        self.payment_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.order = order
 
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'order_id': self.order_id,
+            'payment_date': self.payment_date.isoformat() if self.payment_date else None,
+            'payment_method': self.payment_method,
+            'payment_amount': self.payment_amount,
+            'payment_amount': self.payment_amount,
+            'card_number': self.card_number,
+            'card_holder': self.card_holder,
+            'card_exp_month': self.card_exp_month,
+            'card_exp_year': self.card_exp_year,
+            'card_cvv': self.card_cvv
+        }
 
 class OrderItem(Base):
     __tablename__ = 'order_items'
@@ -289,6 +453,13 @@ class OrderItem(Base):
         self.order_id = order.id
         self.order = order
         self.product = product
+
+    def to_json(self):
+        return {
+            'order_id': self.order_id,
+            'product_id': self.product_id,
+            'quantity': self.quantity,
+        }
 
 
 class DbHelper:

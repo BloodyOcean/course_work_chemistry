@@ -11,5 +11,5 @@ class OrderDeformation(OrderDeformationInterface):
         self.probability = probability
 
     def spoil(self, order: Order) -> Order:
-        order.name = deformate_string(order.name, self.probability)
+        order.status = deformate_string(order.status, self.probability)
         return order

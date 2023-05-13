@@ -14,5 +14,5 @@ class ManufacturerDeformation(ManufacturerDeformationInterface):
         manufacturer.name = deformate_string(manufacturer.name, self.probability)
         manufacturer.description = deformate_string(manufacturer.description, self.probability)
         manufacturer.contact_person = deformate_string(manufacturer.contact_person, self.probability)
-        manufacturer.email = deformate_string(manufacturer.email, self.promanufacturer)
+        manufacturer.email = deformate_string(manufacturer.email, self.probability)
         return manufacturer

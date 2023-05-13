@@ -51,7 +51,7 @@ class ModelsGenerator:
         rows = (Shipping() for _ in range(count))
         res = [deformator.spoil(row) for row in rows]
         self.shipping.extend(rows)
-        return rows
+        return res
 
     def generate_supplier(self, count: int, deformator: SupplierDeformationInterface) -> List[Supplier]:
         rows = (Supplier() for _ in range(count))
