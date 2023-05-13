@@ -347,7 +347,6 @@ class Order(Base):
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=False)
     shipping_id = Column(Integer, ForeignKey('shipping.id'), nullable=False)
     order_date = Column(DateTime, nullable=False)
-    total = Column(Float(precision=2), nullable=False)
     status = Column(Enum('Accepted', 'InProgress', 'Done', 'Canceled', name='order_status'), nullable=False,
                     default='Accepted')
     create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
@@ -358,7 +357,6 @@ class Order(Base):
 
     def __init__(self, customer: Customer, shipping: Shipping):
         now = datetime.now()
-        self.total = random.Random().randint(1, 100)
         self.customer = customer
         self.shipping = shipping
         self.shipping_id = shipping.id
@@ -379,7 +377,6 @@ class Order(Base):
             'customer_id': self.customer_id,
             'shipping_id': self.shipping_id,
             'order_date': self.order_date.isoformat() if self.order_date else None,
-            'total': self.total,
             'status': self.status,
             'create_date': self.create_date.isoformat() if self.create_date else None,
             'update_date': self.update_date.isoformat() if self.update_date else None
@@ -403,6 +400,7 @@ class Payment(Base):
     order = relationship('Order', backref='payments')
 
     def __init__(self, order: Order):
+        now = datetime.now()
         self.card_number = mimesis.Payment().credit_card_number()[-4:]
         self.card_exp_year = random.randint(2025, 2030)
         self.card_exp_month = random.randint(1, 12)
@@ -411,6 +409,14 @@ class Payment(Base):
         self.card_holder = mimesis.Person().full_name()
         self.payment_amount = random.Random().randint(100, 1000) / 100
         self.order_id = order.id
+
+        # Dates for 2 weeks ago and 4 hours ago
+        two_weeks_ago = now - timedelta(weeks=2)
+        four_hours_ago = now - timedelta(hours=4)
+        total_seconds = int((four_hours_ago - two_weeks_ago).total_seconds())
+
+        # Generate a random date between two_weeks_ago and four_hours_ago
+        self.payment_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.order = order
 
 
@@ -426,9 +432,7 @@ class Payment(Base):
             'card_holder': self.card_holder,
             'card_exp_month': self.card_exp_month,
             'card_exp_year': self.card_exp_year,
-            'card_cvv': self.card_cvv,
-            'create_date': self.create_date.isoformat() if self.create_date else None,
-            'update_date': self.update_date.isoformat() if self.update_date else None
+            'card_cvv': self.card_cvv
         }
 
 class OrderItem(Base):
