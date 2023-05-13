@@ -23,7 +23,7 @@ def main():
 def get_db_session():
     # Don't use config.example.ini. Just copy it, rename to config.ini and replace example values 
     # with actual ones. In this way stuff that are used in reality won't be revealed on github.
-    cfg_helper = ConfigHelper(path='configs/config.ini')
+    cfg_helper = ConfigHelper(path='configs/config.example.ini')
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
 
