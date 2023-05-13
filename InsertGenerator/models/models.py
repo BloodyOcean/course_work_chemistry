@@ -167,18 +167,28 @@ class Discount(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(200), nullable=False)
     description = Column(String(1000), nullable=False)
-    start_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    start_date = Column(DateTime, nullable=False)
     discount_percent = Column(Float(precision=2), nullable=False, default=5)
-    end_date = Column(DateTime, default=(datetime.utcnow() + timedelta(days=30)), nullable=False)
+    end_date = Column(DateTime, nullable=False)
     create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products_ref = relationship('Product', backref='Discount')
 
-    def __init__(self):
+    def __init__(self):    
+        now = datetime.now()
         self.title = mimesis.Text().title()
         self.description = mimesis.Text().sentence()
         self.discount_percent = random.randint(5, 100)
+        # Generate a date in the past, but not older than 3 months
+        three_months_ago = now - timedelta(days=90)
+        self.start_date = three_months_ago + timedelta(seconds=random.randint(0, int((now - three_months_ago).total_seconds())))
+
+        # Generate a date between now-1 month and now+7 months
+        one_month_ago = now - timedelta(days=30)
+        seven_months_future = now + timedelta(days=7*30)
+        self.end_date = one_month_ago + timedelta(seconds=random.randint(0, int((seven_months_future - one_month_ago).total_seconds())))
+
 
     def to_json(self):
         return {
@@ -286,7 +296,7 @@ class Shipping(Base):
     __tablename__ = 'shipping'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    delivery_date = Column(DateTime, default=(datetime.utcnow() + timedelta(days=10)), nullable=False)
+    delivery_date = Column(DateTime, nullable=False)
     carrier = Column(String(255), nullable=False)
     receiver = Column(String(255), nullable=False)
     tracking_number = Column(String(255), nullable=False)
@@ -301,9 +311,11 @@ class Shipping(Base):
 
     
     def __init__(self, due_date: DateTime = None):
-        if due_date:
-            self.due_date = due_date
-        self.delivery_date = due_date
+        now = datetime.now()
+        four_days_ago = now - timedelta(days=4)
+        fifteen_days_future = now + timedelta(days=15)
+
+        self.delivery_date = four_days_ago + timedelta(seconds=random.randint(0, int((fifteen_days_future - four_days_ago).total_seconds())))
         self.receiver = mimesis.Person().full_name()
         self.carrier = mimesis.Finance().company()
         self.shipping_address = mimesis.Address().address()
