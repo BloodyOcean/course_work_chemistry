@@ -1,0 +1,1 @@
+{"id": null, "title": "Any element of a tuple can be accessed in constant time.", "description": "Messages can be sent to and received from ports, but these messages must obey the so-called \"port protocol.\"", "start_date": "2023-02-19T04:18:56.705069", "discount_percent": 64, "end_date": "2023-12-03T04:32:26.705069", "create_date": null, "update_date": null}
