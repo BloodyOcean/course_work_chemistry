@@ -346,7 +346,7 @@ class Order(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=False)
     shipping_id = Column(Integer, ForeignKey('shipping.id'), nullable=False)
-    order_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    order_date = Column(DateTime, nullable=False)
     total = Column(Float(precision=2), nullable=False)
     status = Column(Enum('Accepted', 'InProgress', 'Done', 'Canceled', name='order_status'), nullable=False,
                     default='Accepted')
@@ -357,11 +357,20 @@ class Order(Base):
     shipping = relationship("Shipping", backref="Order")
 
     def __init__(self, customer: Customer, shipping: Shipping):
+        now = datetime.now()
         self.total = random.Random().randint(1, 100)
         self.customer = customer
         self.shipping = shipping
         self.shipping_id = shipping.id
         self.customer_id = customer.id
+
+        # Dates for 2 weeks ago and 4 hours ago
+        two_weeks_ago = now - timedelta(weeks=2)
+        four_hours_ago = now - timedelta(hours=4)
+        total_seconds = int((four_hours_ago - two_weeks_ago).total_seconds())
+
+        # Generate a random date between two_weeks_ago and four_hours_ago
+        self.order_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.status = random.choice(['Accepted', 'InProgress', 'Done', 'Canceled'])
 
     def to_json(self):
@@ -369,7 +378,7 @@ class Order(Base):
             'id': self.id,
             'customer_id': self.customer_id,
             'shipping_id': self.shipping_id,
-            'order_date': self.order_date,
+            'order_date': self.order_date.isoformat() if self.order_date else None,
             'total': self.total,
             'status': self.status,
             'create_date': self.create_date.isoformat() if self.create_date else None,
