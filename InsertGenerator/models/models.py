@@ -86,6 +86,8 @@ class Supplier(Base):
     def __init__(self):
         self.name = mimesis.Finance().company()
         self.description = mimesis.Text().sentence()
+        self.phone_number = mimesis.Person().phone_number()
+        self.contact_name = mimesis.Person().full_name()
         self.contact_person = mimesis.Person().full_name()
         self.email = mimesis.Person().email()
 
