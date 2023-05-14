@@ -23,7 +23,7 @@ class Customer(Base):
     city = Column(String(50), nullable=False)
     state = Column(String(50), nullable=False)
     zip_code = Column(String(10), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     orders: Mapped[List["Order"]] = relationship(backref="Customer")
@@ -58,7 +58,7 @@ class ProductCategory(Base):
     __tablename__ = 'product_categories'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products: Mapped[List["Product"]] = relationship(backref="ProductCategory")
@@ -82,7 +82,7 @@ class Manufacturer(Base):
     description = Column(String(1000), nullable=False)
     contact_person = Column(String(100), nullable=False)
     email = Column(String(50), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products_ref = relationship('Product', backref='Manufacturer')
@@ -104,6 +104,7 @@ class Manufacturer(Base):
             'update_date': self.update_date.isoformat() if self.update_date else None
         }
 
+
 class Supplier(Base):
     __tablename__ = 'suppliers'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -112,7 +113,7 @@ class Supplier(Base):
     phone_number = Column(String(1000), nullable=False)
     address = Column(String(150), nullable=False)
     email = Column(String(50), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products_ref = relationship('Product', backref='Supplier')
@@ -140,12 +141,13 @@ class Supplier(Base):
             'update_date': self.update_date.isoformat() if self.update_date else None
         }
 
+
 class Packaging(Base):
     __tablename__ = 'packaging'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     description = Column(String(1000), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products_ref = relationship('Product', backref='Packaging')
@@ -172,25 +174,27 @@ class Discount(Base):
     start_date = Column(DateTime, nullable=False)
     discount_percent = Column(Float(precision=2), nullable=False, default=5)
     end_date = Column(DateTime, nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     products_ref = relationship('Product', backref='Discount')
 
-    def __init__(self):    
+    def __init__(self):
         now = datetime.now()
         self.title = mimesis.Text().title()
         self.description = mimesis.Text().sentence()
         self.discount_percent = random.randint(5, 100)
         # Generate a date in the past, but not older than 3 months
         three_months_ago = now - timedelta(days=90)
-        self.start_date = three_months_ago + timedelta(seconds=random.randint(0, int((now - three_months_ago).total_seconds())))
+        self.start_date = three_months_ago + timedelta(
+            seconds=random.randint(0, int((now - three_months_ago).total_seconds())))
 
         # Generate a date between now-1 month and now+7 months
         one_month_ago = now - timedelta(days=30)
-        seven_months_future = now + timedelta(days=7*30)
-        self.end_date = one_month_ago + timedelta(seconds=random.randint(0, int((seven_months_future - one_month_ago).total_seconds())))
-
+        seven_months_future = now + timedelta(days=7 * 30)
+        self.end_date = one_month_ago + timedelta(
+            seconds=random.randint(0, int((seven_months_future - one_month_ago).total_seconds())))
 
     def to_json(self):
         return {
@@ -204,6 +208,7 @@ class Discount(Base):
             'update_date': self.update_date.isoformat() if self.update_date else None
         }
 
+
 class Product(Base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -216,7 +221,8 @@ class Product(Base):
     supplier_id = Column(Integer, ForeignKey('suppliers.id'), nullable=False)
     packaging_id = Column(Integer, ForeignKey('packaging.id'), nullable=False)
     category_id = Column(Integer, ForeignKey('product_categories.id'), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     category_ref = relationship('ProductCategory', backref='Product')
@@ -269,7 +275,8 @@ class Comment(Base):
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=False)
     comment_text = Column(String(255), nullable=False)
     rating = Column(SmallInteger, nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     product = relationship('Product', backref='comments')
@@ -294,6 +301,7 @@ class Comment(Base):
             'update_date': self.update_date.isoformat() if self.update_date else None
         }
 
+
 class Shipping(Base):
     __tablename__ = 'shipping'
 
@@ -306,13 +314,13 @@ class Shipping(Base):
     shipping_city = Column(String(255), nullable=False)
     shipping_state = Column(String(255), nullable=False)
     shipping_zip = Column(String(255), nullable=False)
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     orders: Mapped[List["Order"]] = relationship(backref="Shipping")
 
-    
-    def __init__(self, due_date: DateTime = None):
+    def __init__(self):
         now = datetime.now()
         four_days_ago = now - timedelta(days=4)
         fifteen_days_future = now + timedelta(days=15)
@@ -325,7 +333,6 @@ class Shipping(Base):
         self.shipping_city = mimesis.Address().city()
         self.shipping_state = mimesis.Address().state()
         self.tracking_number = mimesis.Payment().credit_card_number()
-
 
     def to_json(self):
         return {
@@ -349,9 +356,9 @@ class Order(Base):
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=False)
     shipping_id = Column(Integer, ForeignKey('shipping.id'), nullable=False)
     order_date = Column(DateTime, nullable=False)
-    status = Column(Enum('Accepted', 'InProgress', 'Done', 'Canceled', name='order_status'), nullable=False,
-                    default='Accepted')
-    create_date = Column(DateTime, default=datetime.utcnow, nullable=False)
+    status = Column(Enum('Accepted', 'InProgress', 'Done', 'Canceled', name='order_status'), nullable=False, default='Accepted')
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     customer = relationship("Customer", backref="Order")
@@ -396,6 +403,9 @@ class Payment(Base):
     card_number = Column(String(20))
     card_holder = Column(String(100))
 
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
     order = relationship('Order', backref='payments')
 
     def __init__(self, order: Order):
@@ -415,7 +425,6 @@ class Payment(Base):
         self.payment_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.order = order
 
-
     def to_json(self):
         return {
             'id': self.id,
@@ -427,12 +436,16 @@ class Payment(Base):
             'card_holder': self.card_holder,
         }
 
+
 class OrderItem(Base):
     __tablename__ = 'order_items'
 
     order_id = Column(Integer, ForeignKey('orders.id'), nullable=False, primary_key=True)
     product_id = Column(Integer, ForeignKey('products.id'), nullable=False, primary_key=True)
     quantity = Column(Integer, nullable=False)
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     order = relationship('Order', backref='order_items')
     product = relationship('Product', backref='order_items')
