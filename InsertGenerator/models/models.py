@@ -23,6 +23,7 @@ class Customer(Base):
     city = Column(String(50), nullable=False)
     state = Column(String(50), nullable=False)
     zip_code = Column(String(10), nullable=False)
+
     create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
@@ -32,6 +33,7 @@ class Customer(Base):
         self.first_name = mimesis.Person().first_name()
         self.last_name = mimesis.Person().last_name()
         self.email = mimesis.Person().email()
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
         self.phone_number = mimesis.Person().phone_number()
         self.address = mimesis.Address().address()
         self.city = mimesis.Address().city()
@@ -65,6 +67,7 @@ class ProductCategory(Base):
 
     def __init__(self):
         self.name = mimesis.Text().word()
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -92,6 +95,7 @@ class Manufacturer(Base):
         self.description = mimesis.Text().sentence()
         self.contact_person = mimesis.Person().full_name()
         self.email = mimesis.Person().email()
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -128,6 +132,7 @@ class Supplier(Base):
         self.phone_number = mimesis.Person().phone_number()
         self.contact_name = mimesis.Person().full_name()
         self.address = mimesis.Address().address()
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -155,6 +160,7 @@ class Packaging(Base):
     def __init__(self):
         self.name = mimesis.Food().spices() + random.choice(['XL', 'L', 'M', 'S', 'XS'])
         self.description = mimesis.Text().sentence()
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -187,8 +193,9 @@ class Discount(Base):
         self.discount_percent = random.randint(5, 100)
         # Generate a date in the past, but not older than 3 months
         three_months_ago = now - timedelta(days=90)
-        self.start_date = three_months_ago + timedelta(
-            seconds=random.randint(0, int((now - three_months_ago).total_seconds())))
+        self.start_date = three_months_ago + timedelta(seconds=random.randint(0, int((now - three_months_ago).total_seconds())))
+
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
         # Generate a date between now-1 month and now+7 months
         one_month_ago = now - timedelta(days=30)
@@ -248,6 +255,7 @@ class Product(Base):
         self.discount_ref = discount
         self.packaging_ref = packaging
         self.supplier_ref = supplier
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -288,6 +296,7 @@ class Comment(Base):
         self.customer = customer
         self.product_id = product.id
         self.customer_id = customer.id
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -332,6 +341,7 @@ class Shipping(Base):
         self.shipping_city = mimesis.Address().city()
         self.shipping_state = mimesis.Address().state()
         self.tracking_number = mimesis.Payment().credit_card_number()
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -378,6 +388,7 @@ class Order(Base):
         # Generate a random date between two_weeks_ago and four_hours_ago
         self.order_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.status = random.choice(['Accepted', 'InProgress', 'Done', 'Canceled'])
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -423,6 +434,7 @@ class Payment(Base):
         # Generate a random date between two_weeks_ago and four_hours_ago
         self.payment_date = two_weeks_ago + timedelta(seconds=random.randint(0, total_seconds))
         self.order = order
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
@@ -455,6 +467,7 @@ class OrderItem(Base):
         self.order_id = order.id
         self.order = order
         self.product = product
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):
         return {
