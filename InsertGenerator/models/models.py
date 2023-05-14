@@ -182,7 +182,7 @@ class Discount(Base):
 
     def __init__(self):
         now = datetime.now()
-        self.title = mimesis.Text().title()
+        self.title = mimesis.Text().word()
         self.description = mimesis.Text().sentence()
         self.discount_percent = random.randint(5, 100)
         # Generate a date in the past, but not older than 3 months
@@ -193,8 +193,7 @@ class Discount(Base):
         # Generate a date between now-1 month and now+7 months
         one_month_ago = now - timedelta(days=30)
         seven_months_future = now + timedelta(days=7 * 30)
-        self.end_date = one_month_ago + timedelta(
-            seconds=random.randint(0, int((seven_months_future - one_month_ago).total_seconds())))
+        self.end_date = one_month_ago + timedelta(seconds=random.randint(0, int((seven_months_future - one_month_ago).total_seconds())))
 
     def to_json(self):
         return {
