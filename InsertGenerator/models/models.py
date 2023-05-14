@@ -395,18 +395,12 @@ class Payment(Base):
     payment_amount = Column(Float(precision=2), nullable=False)
     card_number = Column(String(20))
     card_holder = Column(String(100))
-    card_exp_month = Column(Integer)
-    card_exp_year = Column(Integer)
-    card_cvv = Column(Integer)
 
     order = relationship('Order', backref='payments')
 
     def __init__(self, order: Order):
         now = datetime.now()
         self.card_number = mimesis.Payment().credit_card_number()[-4:]
-        self.card_exp_year = random.randint(2025, 2030)
-        self.card_exp_month = random.randint(1, 12)
-        self.card_cvv = random.randint(100, 999)
         self.payment_method = mimesis.Payment().credit_card_network()
         self.card_holder = mimesis.Person().full_name()
         self.payment_amount = random.Random().randint(100, 1000) / 100
@@ -429,12 +423,8 @@ class Payment(Base):
             'payment_date': self.payment_date.isoformat() if self.payment_date else None,
             'payment_method': self.payment_method,
             'payment_amount': self.payment_amount,
-            'payment_amount': self.payment_amount,
             'card_number': self.card_number,
             'card_holder': self.card_holder,
-            'card_exp_month': self.card_exp_month,
-            'card_exp_year': self.card_exp_year,
-            'card_cvv': self.card_cvv
         }
 
 class OrderItem(Base):
