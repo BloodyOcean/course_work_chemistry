@@ -445,6 +445,8 @@ class Payment(Base):
             'payment_amount': self.payment_amount,
             'card_number': self.card_number,
             'card_holder': self.card_holder,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
         }
 
 
@@ -474,6 +476,8 @@ class OrderItem(Base):
             'order_id': self.order_id,
             'product_id': self.product_id,
             'quantity': self.quantity,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
         }
 
 
