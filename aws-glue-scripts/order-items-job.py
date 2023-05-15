@@ -24,9 +24,19 @@ S3bucket_node1 = glueContext.create_dynamic_frame.from_options(
     transformation_ctx="S3bucket_node1",
 )
 
+# Convert DynamicFrame to DataFrame
+df = S3bucket_node1.toDF()
+
+# Drop duplicates based on order_id and product_id
+df_unique = df.dropDuplicates(['order_id', 'product_id'])
+
+# Convert back to DynamicFrame
+S3bucket_node1_unique = glueContext.create_dynamic_frame.from_rdd(df_unique.rdd, schema=df_unique.schema, name="S3bucket_node1_unique",)
+
+
 # Script generated for node ApplyMapping
 ApplyMapping_node2 = ApplyMapping.apply(
-    frame=S3bucket_node1,
+    frame=S3bucket_node1_unique,
     mappings=[
         ("order_id", "int", "order_id", "int"),
         ("product_id", "int", "product_id", "int"),
