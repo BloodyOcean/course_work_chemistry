@@ -19,7 +19,6 @@ class DbService:
         @param n: num of records
         @return: list of appropriate objects
         """
-        # TODO: add thresholds checking
         total_count = self.session.query(obj_type).count()
         random_ids = random.sample(range(1, total_count + 1), n if n < total_count else total_count)
         random_instances = self.session.query(obj_type).filter(obj_type.id.in_(random_ids)).all()

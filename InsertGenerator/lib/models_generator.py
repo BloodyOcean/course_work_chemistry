@@ -50,7 +50,7 @@ class ModelsGenerator:
     def generate_shipping(self, count: int, deformator:ShippingDeformationInterface) -> List[Shipping]:
         rows = (Shipping() for _ in range(count))
         res = [deformator.spoil(row) for row in rows]
-        self.shipping.extend(rows)
+        self.shipping.extend(res)
         return res
 
     def generate_supplier(self, count: int, deformator: SupplierDeformationInterface) -> List[Supplier]:
@@ -76,6 +76,17 @@ class ModelsGenerator:
     def generate_customers(self, count: int, deformator: CustomerDeformationInterface) -> List[Customer]:
         rows = (Customer() for _ in range(count))
         res = [deformator.spoil(row) for row in rows]
+
+        # Only with unique emails
+        seen = []
+        rows = []
+        while len(rows) < count:
+            customer = Customer()
+            if customer.email not in seen:
+                rows.append(customer)
+                seen.append(customer.email)
+            else:
+                print(customer.email)
         self.customers.extend(res)
         return res
 

@@ -12,11 +12,11 @@ def main():
     move_data('product_categories', 'product_categories', [map_product_categories])
     move_data('manufacturers', 'manufacturers', [map_manufacturers])
     move_data('products', 'products', [map_products])
+    move_data('shipping', 'shipping', [map_shipping])
     move_data('orders', 'orders', [map_orders])
     move_data('order_items', 'order_items', [map_order_items])
     move_data('comments', 'comments', [map_comments])
     move_data('payments', 'payments', [map_payments])
-    move_data('shipping', 'shipping', [map_shipping])
 
 
 def move_data(srcTableName: str, destTableName: str, data_processors: list) -> None:

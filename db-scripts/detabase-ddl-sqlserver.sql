@@ -1,8 +1,15 @@
+USE master;
+IF NOT EXISTS(SELECT *
+              FROM sys.databases
+              WHERE name = 'pharmacy_shop')
 CREATE DATABASE pharmacy_shop;
+
 GO
 
 USE pharmacy_shop;
-GO
+
+BEGIN TRANSACTION;
+
 
 IF NOT EXISTS(SELECT *
               FROM sys.tables
@@ -10,13 +17,13 @@ IF NOT EXISTS(SELECT *
 CREATE TABLE discounts
 (
     id               INT PRIMARY KEY IDENTITY (1,1),
-    title             VARCHAR(200)   NOT NULL,
+    title            VARCHAR(200)  NOT NULL,
     description      VARCHAR(1000) NOT NULL,
     start_date       DATETIME      NOT NULL,
     end_date         DATETIME      NOT NULL,
     discount_percent DECIMAL(5, 2) NOT NULL,
-    create_date      DATETIME      DEFAULT CURRENT_TIMESTAMP,
-    update_date      DATETIME      DEFAULT CURRENT_TIMESTAMP
+    create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 IF NOT EXISTS(SELECT *
@@ -39,7 +46,7 @@ CREATE TABLE suppliers
     id           INT PRIMARY KEY IDENTITY (1,1),
     name         VARCHAR(50)  NOT NULL,
     contact_name VARCHAR(50)  NOT NULL,
-    phone_number VARCHAR(15)  NOT NULL,
+    phone_number VARCHAR(20)  NOT NULL,
     email        VARCHAR(50)  NOT NULL UNIQUE,
     address      VARCHAR(150) NOT NULL,
     create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -55,7 +62,7 @@ CREATE TABLE customers
     first_name   VARCHAR(50)  NOT NULL,
     last_name    VARCHAR(50)  NOT NULL,
     email        VARCHAR(50)  NOT NULL UNIQUE,
-    phone_number VARCHAR(15)  NOT NULL,
+    phone_number VARCHAR(20)  NOT NULL,
     address      VARCHAR(150) NOT NULL,
     city         VARCHAR(50)  NOT NULL,
     state        VARCHAR(50)  NOT NULL,
@@ -101,7 +108,7 @@ CREATE TABLE products
     quantity        SMALLINT       NOT NULL,
     manufacturer_id INT            NOT NULL,
     supplier_id     INT            NOT NULL,
-    packaging_id     INT            NOT NULL,
+    packaging_id    INT            NOT NULL,
     discount_id     INT            NOT NULL,
     category_id     INT            NOT NULL,
     create_date     DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -111,6 +118,24 @@ CREATE TABLE products
     FOREIGN KEY (manufacturer_id) REFERENCES manufacturers (id),
     FOREIGN KEY (packaging_id) REFERENCES packaging (id),
     FOREIGN KEY (supplier_id) REFERENCES suppliers (id)
+);
+
+IF NOT EXISTS(SELECT *
+              FROM sys.tables
+              WHERE name = 'shipping')
+CREATE TABLE shipping
+(
+    id               INT PRIMARY KEY IDENTITY (1,1),
+    delivery_date    DATETIME     NOT NULL,
+    carrier          VARCHAR(50)  NOT NULL,
+    receiver         VARCHAR(100) NOT NULL,
+    tracking_number  VARCHAR(50)  NOT NULL,
+    shipping_address VARCHAR(150) NOT NULL,
+    shipping_city    VARCHAR(50)  NOT NULL,
+    shipping_state   VARCHAR(50)  NOT NULL,
+    shipping_zip     VARCHAR(10)  NOT NULL,
+    create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
 );
 
 IF NOT EXISTS(SELECT *
@@ -126,7 +151,7 @@ CREATE TABLE orders
     create_date DATETIME             DEFAULT CURRENT_TIMESTAMP,
     update_date DATETIME             DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers (id),
-    FOREIGN KEY (shipping_id) REFERENCES shipping_id (id)
+    FOREIGN KEY (shipping_id) REFERENCES shipping (id)
 );
 
 IF NOT EXISTS(SELECT *
@@ -137,6 +162,8 @@ CREATE TABLE order_items
     order_id   INT NOT NULL,
     product_id INT NOT NULL,
     quantity   INT NOT NULL,
+    create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
@@ -170,25 +197,9 @@ CREATE TABLE payments
     payment_amount DECIMAL(10, 2) NOT NULL,
     card_number    VARCHAR(20),
     card_holder    VARCHAR(100),
+    create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
-IF NOT EXISTS(SELECT *
-              FROM sys.tables
-              WHERE name = 'shipping')
-CREATE TABLE shipping
-(
-    id               INT PRIMARY KEY IDENTITY (1,1),
-    delivery_date    DATETIME       NOT NULL,
-    carrier          VARCHAR(50)    NOT NULL,
-    receiver         VARCHAR(100)    NOT NULL,
-    tracking_number  VARCHAR(50)    NOT NULL,
-    shipping_address VARCHAR(150)   NOT NULL,
-    shipping_city    VARCHAR(50)    NOT NULL,
-    shipping_state   VARCHAR(50)    NOT NULL,
-    shipping_zip     VARCHAR(10)    NOT NULL,
-    create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-);
-
-
+COMMIT TRAN;
