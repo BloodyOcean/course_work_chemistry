@@ -46,7 +46,7 @@ CREATE TABLE suppliers
     id           INT PRIMARY KEY IDENTITY (1,1),
     name         VARCHAR(50)  NOT NULL,
     contact_name VARCHAR(50)  NOT NULL,
-    phone_number VARCHAR(15)  NOT NULL,
+    phone_number VARCHAR(20)  NOT NULL,
     email        VARCHAR(50)  NOT NULL UNIQUE,
     address      VARCHAR(150) NOT NULL,
     create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -62,7 +62,7 @@ CREATE TABLE customers
     first_name   VARCHAR(50)  NOT NULL,
     last_name    VARCHAR(50)  NOT NULL,
     email        VARCHAR(50)  NOT NULL UNIQUE,
-    phone_number VARCHAR(15)  NOT NULL,
+    phone_number VARCHAR(20)  NOT NULL,
     address      VARCHAR(150) NOT NULL,
     city         VARCHAR(50)  NOT NULL,
     state        VARCHAR(50)  NOT NULL,
@@ -162,6 +162,8 @@ CREATE TABLE order_items
     order_id   INT NOT NULL,
     product_id INT NOT NULL,
     quantity   INT NOT NULL,
+    create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
@@ -195,6 +197,8 @@ CREATE TABLE payments
     payment_amount DECIMAL(10, 2) NOT NULL,
     card_number    VARCHAR(20),
     card_holder    VARCHAR(100),
+    create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
