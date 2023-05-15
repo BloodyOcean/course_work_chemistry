@@ -1,11 +1,13 @@
-﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop;
+﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop_moved;
 
-USE pharmacy_shop;
+USE pharmacy_shop_moved;
+
+BEGIN;
 
 CREATE TABLE IF NOT EXISTS discounts
 (
     id               INT PRIMARY KEY AUTO_INCREMENT,
-    title            VARCHAR(200)   NOT NULL,
+    title            VARCHAR(200)  NOT NULL,
     description      VARCHAR(1000) NOT NULL,
     start_date       TIMESTAMP     NOT NULL,
     end_date         TIMESTAMP     NOT NULL,
@@ -155,3 +157,4 @@ CREATE TABLE IF NOT EXISTS payments
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 
+COMMIT;
