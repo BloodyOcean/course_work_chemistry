@@ -1,6 +1,6 @@
-﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop_moved;
+﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop;
 
-USE pharmacy_shop_moved;
+USE pharmacy_shop;
 
 BEGIN;
 

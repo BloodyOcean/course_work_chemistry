@@ -94,7 +94,7 @@ def map_products(rows) -> list[dict]:
 def map_orders(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
-        'shipping_id': str(row[1])
+        'shipping_id': str(row[1]),
         'customer_id': str(row[2]),
         'order_date': str(row[3]),
         'status': row[4],
