@@ -41,6 +41,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
     mappings=[
         ("name", "string", "name", "string"),
         ("description", "string", "description", "string"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )

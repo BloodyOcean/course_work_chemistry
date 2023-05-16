@@ -42,6 +42,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
         ("customer_id", "int", "customer_id", "int"),
         ("comment_text", "string", "comment_text", "string"),
         ("rating", "int", "rating", "smallint"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )

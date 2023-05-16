@@ -44,6 +44,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
         ("description", "string", "description", "string"),
         ("contact_person", "string", "contact_person", "string"),
         ("email", "string", "email", "string"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )

@@ -50,6 +50,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
         ("start_date", "string", "start_date", "date"),
         ("discount_percent", "int", "discount_percent", "int"),
         ("end_date", "string", "end_date", "date"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )

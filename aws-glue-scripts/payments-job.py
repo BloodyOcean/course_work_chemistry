@@ -45,6 +45,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
         ("payment_amount", "double", "payment_amount", "decimal"),
         ("card_number", "string", "card_number", "string"),
         ("card_holder", "string", "card_holder", "string"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )

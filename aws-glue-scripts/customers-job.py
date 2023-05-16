@@ -59,6 +59,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
         ("city", "string", "city", "string"),
         ("state", "string", "state", "string"),
         ("zip_code", "string", "zip_code", "string"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )

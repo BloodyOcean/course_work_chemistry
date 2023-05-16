@@ -48,6 +48,7 @@ ApplyMapping_node2 = ApplyMapping.apply(
         ("packaging_id", "int", "packaging_id", "int"),
         ("category_id", "int", "category_id", "int"),
         ("description", "string", "description", "string"),
+        ("create_date", "string", "create_date", "date"),
     ],
     transformation_ctx="ApplyMapping_node2",
 )
