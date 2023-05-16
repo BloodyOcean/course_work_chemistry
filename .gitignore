@@ -1,0 +1,11 @@
+﻿# JetBrains IDEs
+.idea
+# Virtual environments
+venv
+# Python caches
+__pycache__
+# Configuration files (congig.example.py still is available)
+config.py 
+# vscode
+.vscode
+config.ini

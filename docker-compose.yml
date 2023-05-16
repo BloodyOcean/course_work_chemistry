@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+
+  maria-db:
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecretpassword   # user=root 
+    volumes:
+      - db_data:/var/lib/mysql
+
+  sqlserver-db:
+    container_name: sqlserverdb
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: mysecretpa$$w0rd
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+volumes:
+  mssql-data:
+    driver: local
+      
+volumes:
+  db_data:
+  mssql-data:
+    driver: local
