@@ -1,10 +1,10 @@
 import random
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from typing import List
 
 import mimesis
 import sqlalchemy
-from sqlalchemy import Column, Integer, String, DateTime, Float, SmallInteger, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Float, SmallInteger, Enum, ForeignKey, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Mapped, sessionmaker
 from sqlalchemy_utils import database_exists, create_database
@@ -359,10 +359,120 @@ class Shipping(Base):
         }
 
 
+class Position(Base):
+    __tablename__ = 'position'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(255), nullable=False)
+    salary = Column(Float(precision=2), nullable=False)
+
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    def __init__(self):
+        now = datetime.now()
+
+        self.title = mimesis.Text().title()
+        self.salary = random.randint(20, 200)
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'salary': self.salary,
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
+
+class Employee(Base):
+    __tablename__ = 'employee'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)
+    position_id = Column(Integer, ForeignKey('position.id'), nullable=False)
+    email = Column(String(50), nullable=False)
+    phone_number = Column(String(1000), nullable=False)
+    address = Column(String(150), nullable=False)
+    date_of_birth = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    hire_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    position = relationship("Position", backref="Employee")
+
+    def __init__(self, position: Position):
+        now = datetime.now()
+        self.position = position
+        self.position_id = position.id
+
+        # Generate a random date between two_weeks_ago and four_hours_ago
+        self.name = mimesis.Person().full_name()
+        self.email = mimesis.Person().email()
+        self.phone_number = mimesis.Person().phone_number()
+        self.address = mimesis.Address().address()
+        self.date_of_birth = datetime.utcnow() - timedelta(days=random.randint(365 * 18, 365 * 30))
+        self.hire_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
+        self.create_date = self.hire_date
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'position_id': self.position_id,
+            'name': self.name,
+            'email': self.email,
+            'phone_number': self.phone_number,
+            'address': self.address,
+            'date_of_birth': self.date_of_birth.isoformat(),
+            'hire_date': self.hire_date.isoformat(),
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
+
+class WorkSchedule(Base):
+    __tablename__ = 'work_schedule'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    employee_id = Column(Integer, ForeignKey('employee.id'), nullable=False)
+    start_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    end_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    start_time = Column(Time, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    end_time = Column(Time, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    create_date = Column(DateTime, default=datetime.utcnow() - timedelta(days=random.randint(0, 365)), nullable=False)
+    update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+
+    employee = relationship("Employee", backref="WorkSchedule")
+
+    def __init__(self, employee: Employee):
+        now = datetime.now()
+        self.employee = employee
+        self.employee_id = employee.id
+
+        self.start_date = datetime.utcnow() - timedelta(weeks=random.randint(24, 48))
+        self.end_date = datetime.utcnow() - timedelta(weeks=random.randint(0, 12))
+        self.start_time = time(9, 0, 0)
+        self.end_time = time(18, 0, 0)
+        self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'employee_id': self.employee_id,
+            'start_date': self.start_date.isoformat(),
+            'end_date': self.order_date.isoformat(),
+            'start_time': self.start_time.isoformat(),
+            'end_time': self.end_time.isoformat(),
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'update_date': self.update_date.isoformat() if self.update_date else None
+        }
+
+
 class Order(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True, autoincrement=True)
     customer_id = Column(Integer, ForeignKey('customers.id'), nullable=False)
+    employee_id = Column(Integer, ForeignKey('employee.id'), nullable=False)
     shipping_id = Column(Integer, ForeignKey('shipping.id'), nullable=False)
     order_date = Column(DateTime, nullable=False)
     status = Column(Enum('Accepted', 'InProgress', 'Done', 'Canceled', name='order_status'), nullable=False, default='Accepted')
@@ -371,12 +481,15 @@ class Order(Base):
     update_date = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
     customer = relationship("Customer", backref="Order")
+    employee = relationship("Employee", backref="Order")
     shipping = relationship("Shipping", backref="Order")
 
-    def __init__(self, customer: Customer, shipping: Shipping):
+    def __init__(self, customer: Customer, shipping: Shipping, employee:Employee):
         now = datetime.now()
         self.customer = customer
         self.shipping = shipping
+        self.employee = employee
+        self.employee_id = employee.id
         self.shipping_id = shipping.id
         self.customer_id = customer.id
 
