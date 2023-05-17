@@ -1,6 +1,6 @@
-﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop;
+﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop_2;
 
-USE pharmacy_shop;
+USE pharmacy_shop_2;
 
 BEGIN;
 
@@ -104,13 +104,51 @@ CREATE TABLE IF NOT EXISTS shipping
     shipping_city    VARCHAR(50)  NOT NULL,
     shipping_state   VARCHAR(50)  NOT NULL,
     shipping_zip     VARCHAR(10)  NOT NULL,
-    create_date      DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date      DATETIME DEFAULT CURRENT_TIMESTAMP
+    create_date      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_date      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS `position`
+(
+    id         INT PRIMARY KEY AUTO_INCREMENT,
+    title      VARCHAR(200)  NOT NULL,
+    salary     DECIMAL(10, 2) NOT NULL,
+    create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS employee
+(
+    id            INT PRIMARY KEY AUTO_INCREMENT,
+    name          VARCHAR(100) NOT NULL,
+    position_id   INT          NOT NULL,
+    email         VARCHAR(100) NOT NULL,
+    phone_number  VARCHAR(20)  NOT NULL,
+    address       VARCHAR(200) NOT NULL,
+    date_of_birth DATE         NOT NULL,
+    hire_date     DATE         NOT NULL,
+    create_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (position_id) REFERENCES `position` (id)
+);
+
+CREATE TABLE IF NOT EXISTS work_schedule
+(
+    id          INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT  NOT NULL,
+    start_date  DATE NOT NULL,
+    end_date    DATE NOT NULL,
+    start_time  TIME NOT NULL,
+    end_time    TIME NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (employee_id) REFERENCES employee (id)
 );
 
 CREATE TABLE IF NOT EXISTS orders
 (
     id          INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT                                                 NOT NULL,
     shipping_id INT,
     customer_id INT                                                 NOT NULL,
     order_date  TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP,
@@ -118,16 +156,17 @@ CREATE TABLE IF NOT EXISTS orders
     create_date TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP,
     update_date TIMESTAMP                                                    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (customer_id) REFERENCES customers (id),
+    FOREIGN KEY (employee_id) REFERENCES employee (id),
     FOREIGN KEY (shipping_id) REFERENCES shipping (id)
 );
 
 CREATE TABLE IF NOT EXISTS order_items
 (
-    order_id   INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity   INT NOT NULL,
-    create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    order_id    INT NOT NULL,
+    product_id  INT NOT NULL,
+    quantity    INT NOT NULL,
+    create_date DATETIME  DEFAULT CURRENT_TIMESTAMP,
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (order_id, product_id),
     FOREIGN KEY (order_id) REFERENCES orders (id),
     FOREIGN KEY (product_id) REFERENCES products (id)
@@ -156,8 +195,8 @@ CREATE TABLE IF NOT EXISTS payments
     payment_amount DECIMAL(10, 2) NOT NULL,
     card_number    VARCHAR(20),
     card_holder    VARCHAR(100),
-    create_date  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    create_date    DATETIME  DEFAULT CURRENT_TIMESTAMP,
+    update_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders (id)
 );
 

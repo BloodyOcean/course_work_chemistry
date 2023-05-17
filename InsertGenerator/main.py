@@ -40,6 +40,7 @@ def main():
     generator.generate_manufacturer(75, manufacturer_deformator)
     generator.generate_supplier(115, supplier_deformator)
     generator.generate_packaging(33, packaging_deformator)
+    generator.generate_positions(10)
     generator.load_by_lst(generator.customers)
     generator.load_by_lst(generator.shipping)
     generator.load_by_lst(generator.discounts)
@@ -47,19 +48,26 @@ def main():
     generator.load_by_lst(generator.manufactors)
     generator.load_by_lst(generator.suppliers)
     generator.load_by_lst(generator.packaging)
+    generator.load_by_lst(generator.positions)
+
+    # Generate 1.5-level object
+    generator.generate_employees(50)
+    generator.load_by_lst(generator.employees)
 
     # Generate first-level object
     generator.generate_products(50, products_deformator)
-    generator.generate_orders(100, orders_deformator)
+    generator.generate_work_schedules(50)
     generator.load_by_lst(generator.products)
-    generator.load_by_lst(generator.orders)
+    generator.load_by_lst(generator.work_schedules)
 
     # Generate second-level object
+    generator.generate_orders(100, orders_deformator)
+    generator.load_by_lst(generator.orders)
     generator.generate_comment(60, comments_deformator)
-    generator.generate_payments(99, payments_deformator)
-    generator.generate_order_item(55, order_items_deformator)
     generator.load_by_lst(generator.comments)
+    generator.generate_payments(99, payments_deformator)
     generator.load_by_lst(generator.payments)
+    generator.generate_order_item(55, order_items_deformator)
     generator.load_by_lst(generator.order_items)
 
     db_helper.session.close()
