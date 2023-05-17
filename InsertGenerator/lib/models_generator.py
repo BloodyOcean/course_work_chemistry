@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 
 from deformation import *
 from lib.db_service import DbService
-from models.models import Customer, ProductCategory, Manufacturer, Order, Payment, Product, OrderItem, Comment, \
-    Packaging, Discount, Shipping, Supplier
+from models.models import *
 
 
 class ModelsGenerator:
@@ -22,6 +21,9 @@ class ModelsGenerator:
     discounts = []
     packaging = []
     order_items = []
+    positions = []
+    employees = []
+    work_schedules = []
     session = None
     db_service = None
 
@@ -41,13 +43,13 @@ class ModelsGenerator:
         self.packaging.extend(res)
         return res
 
-    def generate_discount(self, count: int , deformator:DiscountDeformationInterface) -> List[Discount]:
+    def generate_discount(self, count: int, deformator: DiscountDeformationInterface) -> List[Discount]:
         rows = (Discount() for _ in range(count))
         res = [deformator.spoil(row) for row in rows]
         self.discounts.extend(res)
         return res
 
-    def generate_shipping(self, count: int, deformator:ShippingDeformationInterface) -> List[Shipping]:
+    def generate_shipping(self, count: int, deformator: ShippingDeformationInterface) -> List[Shipping]:
         rows = (Shipping() for _ in range(count))
         res = [deformator.spoil(row) for row in rows]
         self.shipping.extend(res)
@@ -62,7 +64,11 @@ class ModelsGenerator:
     def generate_orders(self, count: int, deformator: OrderDeformationInterface) -> List[Order]:
         temp_customers = self.db_service.get_instances(count, Customer)
         temp_shipping = self.db_service.get_instances(count, Shipping)
-        rows = (Order(random.choice(temp_customers), random.choice(temp_shipping)) for _ in range(count))
+        temp_employee = self.db_service.get_instances(count, Employee)
+        rows = (Order(
+                    random.choice(temp_customers),
+                    random.choice(temp_shipping),
+                    random.choice(temp_employee)) for _ in range(count))
         res = [deformator.spoil(row) for row in rows]
         self.orders.extend(res)
         return res
@@ -72,6 +78,23 @@ class ModelsGenerator:
         res = [deformator.spoil(row) for row in rows]
         self.categories.extend(res)
         return res
+
+    def generate_positions(self, count: int) -> List[Position]:
+        rows = [Position() for _ in range(count)]
+        self.positions.extend(rows)
+        return rows
+
+    def generate_employees(self, count: int) -> List[Position]:
+        temp_position = self.db_service.get_instances(count, Position)
+        rows = [Employee(random.choice(temp_position)) for _ in range(count)]
+        self.employees.extend(rows)
+        return rows
+
+    def generate_work_schedules(self, count: int) -> List[Position]:
+        temp_employee = self.db_service.get_instances(count, Employee)
+        rows = [WorkSchedule(random.choice(temp_employee)) for _ in range(count)]
+        self.work_schedules.extend(rows)
+        return rows
 
     def generate_customers(self, count: int, deformator: CustomerDeformationInterface) -> List[Customer]:
         rows = (Customer() for _ in range(count))

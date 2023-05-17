@@ -91,15 +91,54 @@ def map_products(rows) -> list[dict]:
     } for row in rows]
 
 
+def map_position(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'title': row[1],
+        'salary': str(row[2]),
+        'create_date': str(row[3]),
+        'update_date': str(row[4])
+    } for row in rows]
+
+
+def map_employee(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'name': row[1],
+        'position_id': str(row[2]),
+        'email': row[3],
+        'phone_number': row[4],
+        'address': row[5],
+        'date_of_birth': str(row[6]),
+        'hire_date': str(row[7]),
+        'create_date': str(row[8]),
+        'update_date': str(row[9])
+    } for row in rows]
+
+
+def map_work_schedule(rows) -> list[dict]:
+    return [{
+        'id': str(row[0]),
+        'employee_id': str(row[1]),
+        'start_date': str(row[2]),
+        'end_date': str(row[3]),
+        'start_time': str(row[4]),
+        'end_time': str(row[5]),
+        'create_date': str(row[6]),
+        'update_date': str(row[7])
+    } for row in rows]
+
+
 def map_orders(rows) -> list[dict]:
     return [{
         'id': str(row[0]),
-        'shipping_id': str(row[1]),
-        'customer_id': str(row[2]),
-        'order_date': str(row[3]),
-        'status': row[4],
-        'create_date': str(row[5]),
-        'update_date': str(row[6])
+        'employee_id': str(row[1]),
+        'shipping_id': str(row[2]),
+        'customer_id': str(row[3]),
+        'order_date': str(row[4]),
+        'status': row[5],
+        'create_date': str(row[6]),
+        'update_date': str(row[7])
     } for row in rows]
 
 
