@@ -179,7 +179,6 @@ CREATE TABLE work_schedule
     end_date    DATE NOT NULL,
     start_time  TIME NOT NULL,
     end_time    TIME NOT NULL,
-    location    VARCHAR(100),
     create_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (employee_id) REFERENCES employee (id)

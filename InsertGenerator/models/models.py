@@ -373,7 +373,7 @@ class Position(Base):
         now = datetime.now()
 
         self.title = mimesis.Text().title()
-        self.salary = random.randint(20, 200)
+        self.salary = random.randint(800, 4000)
         self.create_date = datetime.utcnow() - timedelta(days=random.randint(0, 365))
 
     def to_json(self):

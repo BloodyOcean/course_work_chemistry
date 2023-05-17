@@ -1,6 +1,6 @@
-﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop_2;
+﻿CREATE DATABASE IF NOT EXISTS pharmacy_shop;
 
-USE pharmacy_shop_2;
+USE pharmacy_shop;
 
 BEGIN;
 
@@ -140,8 +140,8 @@ CREATE TABLE IF NOT EXISTS work_schedule
     end_date    DATE NOT NULL,
     start_time  TIME NOT NULL,
     end_time    TIME NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    create_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_date  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (employee_id) REFERENCES employee (id)
 );
 
